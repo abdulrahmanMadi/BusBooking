@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusBooking.Core.Dtos
+namespace BusBooking.Core.Dtos.Auth
 {
     public class LoginRequestDto
     {
