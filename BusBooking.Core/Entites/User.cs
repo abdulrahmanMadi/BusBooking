@@ -8,7 +8,7 @@ namespace BusBooking.Core.Entites
 {
     public class User
     {
-        public int UserId { get; set; }
+        public int UserId { get; set; } // Primary key
         public string UserName { get; set; }
         public string EmailId { get; set; }
         public string FullName { get; set; }

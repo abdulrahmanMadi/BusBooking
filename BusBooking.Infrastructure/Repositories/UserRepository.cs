@@ -189,5 +189,13 @@ namespace BusBooking.Infrastructure.Repositories
                 ProjectName = user.ProjectName
             };
         }
+        public IEnumerable<RoleDto> GetAllRoles()
+        {
+            return _context.Roles.Select(r => new RoleDto
+            {
+                RoleId = r.RoleId,
+                RoleName = r.RoleName
+            }).ToList();
+        }
     }
 }

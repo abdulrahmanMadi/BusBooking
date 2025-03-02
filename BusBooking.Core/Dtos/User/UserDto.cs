@@ -17,5 +17,6 @@ namespace BusBooking.Core.Dtos.User
         public string ProjectName { get; set; }
         public string RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
+        public string ContactNo { get; set; } // Additional field for vendors
     }
 }

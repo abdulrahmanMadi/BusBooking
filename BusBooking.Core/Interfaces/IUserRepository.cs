@@ -30,5 +30,7 @@ namespace BusBooking.Core.Interfaces
         // Refresh token methods
         void UpdateRefreshToken(int userId, string refreshToken, DateTime expiryTime);
         UserDto GetUserByRefreshToken(string refreshToken);
+        IEnumerable<RoleDto> GetAllRoles();
+
     }
 }
