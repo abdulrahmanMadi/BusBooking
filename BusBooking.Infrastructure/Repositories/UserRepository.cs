@@ -1,11 +1,14 @@
-﻿
+﻿using BusBooking.Core.Dtos;
 using BusBooking.Core.Dtos.Auth;
 using BusBooking.Core.Dtos.User;
 using BusBooking.Core.Dtos.Vendor;
 using BusBooking.Core.Entites;
 using BusBooking.Core.Interfaces;
 using BusBooking.Infrastructure.Data;
-
+using Microsoft.EntityFrameworkCore; // Add this for Include
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BusBooking.Infrastructure.Repositories
 {
@@ -21,7 +24,10 @@ namespace BusBooking.Infrastructure.Repositories
         // General user methods
         public UserDto Authenticate(LoginRequestDto loginRequest)
         {
-            var user = _context.Users.SingleOrDefault(u => u.UserName == loginRequest.UserName && u.Password == loginRequest.Password);
+            var user = _context.Users
+                .Include(u => u.Role) // Eagerly load the Role entity
+                .SingleOrDefault(u => u.UserName == loginRequest.UserName && u.Password == loginRequest.Password);
+
             if (user == null)
                 return null;
 
@@ -50,12 +56,27 @@ namespace BusBooking.Infrastructure.Repositories
 
         public IEnumerable<UserDto> GetAllUsers()
         {
-            return _context.Users.Select(u => MapToUserDto(u)).ToList();
+            return _context.Users
+                .Include(u => u.Role) // Eagerly load the Role entity
+                .Select(u => new UserDto
+                {
+                    UserId = u.UserId,
+                    UserName = u.UserName,
+                    EmailId = u.EmailId,
+                    FullName = u.FullName,
+                    Role = u.Role.RoleName, // Ensure Role is included in the query
+                    CreatedDate = u.CreatedDate,
+                    ProjectName = u.ProjectName
+                })
+                .ToList();
         }
 
         public UserDto GetUserById(int userId)
         {
-            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
+            var user = _context.Users
+                .Include(u => u.Role) // Eagerly load the Role entity
+                .FirstOrDefault(u => u.UserId == userId);
+
             return user == null ? null : MapToUserDto(user);
         }
 
@@ -87,6 +108,7 @@ namespace BusBooking.Infrastructure.Repositories
         public IEnumerable<VendorDto> GetAllVendors()
         {
             return _context.Users
+                .Include(u => u.Role) // Eagerly load the Role entity
                 .Where(u => u.Role.RoleName == "Vendor")
                 .Select(u => new VendorDto
                 {
@@ -99,7 +121,10 @@ namespace BusBooking.Infrastructure.Repositories
 
         public VendorDto GetVendorById(int userId)
         {
-            var user = _context.Users.FirstOrDefault(u => u.UserId == userId && u.Role.RoleName == "Vendor");
+            var user = _context.Users
+                .Include(u => u.Role) // Eagerly load the Role entity
+                .FirstOrDefault(u => u.UserId == userId && u.Role.RoleName == "Vendor");
+
             return user == null ? null : new VendorDto
             {
                 VendorId = user.UserId,
@@ -171,12 +196,15 @@ namespace BusBooking.Infrastructure.Repositories
 
         public UserDto GetUserByRefreshToken(string refreshToken)
         {
-            var user = _context.Users.FirstOrDefault(u => u.RefreshToken == refreshToken);
+            var user = _context.Users
+                .Include(u => u.Role) // Eagerly load the Role entity
+                .FirstOrDefault(u => u.RefreshToken == refreshToken);
+
             return user == null ? null : MapToUserDto(user);
         }
 
         // Helper method to map User to UserDto
-        private UserDto MapToUserDto(User user)
+        private static UserDto MapToUserDto(User user)
         {
             return new UserDto
             {
@@ -189,6 +217,7 @@ namespace BusBooking.Infrastructure.Repositories
                 ProjectName = user.ProjectName
             };
         }
+
         public IEnumerable<RoleDto> GetAllRoles()
         {
             return _context.Roles.Select(r => new RoleDto

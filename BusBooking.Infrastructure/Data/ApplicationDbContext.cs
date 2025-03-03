@@ -14,7 +14,6 @@ namespace BusBooking.Infrastructure.Data
         public DbSet<BusSchedule> BusSchedules { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<LocationAddress> LocationAddresses { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -48,10 +47,11 @@ namespace BusBooking.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BusSchedule>()
-                .HasOne(s => s.Vendor)
-                .WithMany()
-                .HasForeignKey(s => s.VendorId)
-                .OnDelete(DeleteBehavior.Restrict);
+     .HasOne(bs => bs.Vendor)
+     .WithMany()
+     .HasForeignKey(bs => bs.VendorId)
+     .OnDelete(DeleteBehavior.Restrict); // or DeleteBehavior.Cascade, depending on your requirements
+
 
             // Configure FromLocation relationship
             modelBuilder.Entity<BusSchedule>()

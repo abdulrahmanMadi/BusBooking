@@ -1,8 +1,7 @@
-﻿using BusBooking.Controllers;
-using BusBooking.Core.Dtos.Location;
+﻿using BusBooking.Core.Dtos.Location;
 using BusBooking.Core.Interfaces;
-using BusBooking.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BusBooking.Controllers
 {
@@ -20,66 +19,127 @@ namespace BusBooking.Controllers
         [HttpGet("GetBusLocations")]
         public IActionResult GetAllLocations()
         {
-            var locations = _locationRepository.GetAllLocations();
-            return Ok(new
+            try
             {
-                message = "Locations retrieved successfully",
-                result = true,
-                data = locations
-            });
+                var locations = _locationRepository.GetAllLocations();
+                return Ok(new
+                {
+                    message = "Locations retrieved successfully",
+                    result = true,
+                    data = locations
+                });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
         }
 
-        [HttpGet("GetBusLocationById/{locationId}")]
+        [HttpGet("GetLocationById/{locationId}")]
         public IActionResult GetLocationById(int locationId)
         {
-            var location = _locationRepository.GetLocationById(locationId);
-            if (location == null)
-                return NotFound(new { message = "Location not found", result = false });
-
-            return Ok(new
+            try
             {
-                message = "Location retrieved successfully",
-                result = true,
-                data = location
-            });
+                var location = _locationRepository.GetLocationById(locationId);
+                return Ok(new
+                {
+                    message = "Location retrieved successfully",
+                    result = true,
+                    data = location
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, result = false });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
         }
 
-        [HttpPost("PostBusLocation")]
+        [HttpPost("CreateLocation")]
         public IActionResult CreateLocation([FromBody] LocationDto locationDto)
         {
-            var result = _locationRepository.CreateLocation(locationDto);
-            return Ok(new
+            try
             {
-                message = "Location created successfully",
-                result = true,
-                data = result
-            });
+                var result = _locationRepository.CreateLocation(locationDto);
+                return Ok(new
+                {
+                    message = "Location created successfully",
+                    result = true,
+                    data = result
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
         }
 
-        [HttpPut("PutBusLocation/{locationId}")]
+        [HttpPut("UpdateLocation/{locationId}")]
         public IActionResult UpdateLocation(int locationId, [FromBody] LocationDto locationDto)
         {
-            var result = _locationRepository.UpdateLocation(locationId, locationDto);
-            if (result == null)
-                return NotFound(new { message = "Location not found", result = false });
-
-            return Ok(new
+            try
             {
-                message = "Location updated successfully",
-                result = true,
-                data = result
-            });
+                var result = _locationRepository.UpdateLocation(locationId, locationDto);
+                return Ok(new
+                {
+                    message = "Location updated successfully",
+                    result = true,
+                    data = result
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, result = false });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
         }
 
-        [HttpDelete("DeleteBusLocation/{locationId}")]
+        [HttpDelete("DeleteLocation/{locationId}")]
         public IActionResult DeleteLocation(int locationId)
         {
-            _locationRepository.DeleteLocation(locationId);
-            return Ok(new
+            try
             {
-                message = "Location deleted successfully",
-                result = true
-            });
+                _locationRepository.DeleteLocation(locationId);
+                return Ok(new
+                {
+                    message = "Location deleted successfully",
+                    result = true
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, result = false });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
         }
     }
 }

@@ -1,18 +1,33 @@
 ﻿using BusBooking.Core.Dtos.Bus;
+using BusBooking.Core.Dtos.Location;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusBooking.Core.Interfaces
 {
     public interface IBusBookingRepository
     {
-        IEnumerable<BusBookingDto> GetAllBusBookings(int vendorId);
-        BusBookingDto GetBusBookingById(int bookingId);
-        BusBookingDto CreateBusBooking(BusBookingDto busBookingDto);
-        void DeleteBusBooking(int bookingId);
+        // Location methods
+        LocationDto GetBusLocationById(int id);
+        LocationAddressDto GetAddressByLocationId(int id);
+        LocationAddressDto PostBusLocationAddress(LocationAddressDto locationAddressDto);
+        LocationDto PutBusLocation(int id, LocationDto locationDto);
+        LocationDto PostBusLocation(LocationDto locationDto);
+        void DeleteBusLocation(int id);
 
+        // Bus schedule methods
+        IEnumerable<BusScheduleDto> GetBusSchedules();
+        IEnumerable<BusScheduleDto> SearchBus(int from, int to, string date);
+        IEnumerable<int> GetBookedSeats(int scheduleId);
+        BusScheduleDto GetBusScheduleById(int id);
+        BusScheduleDto PutBusSchedule(int id, BusScheduleDto busScheduleDto);
+        BusScheduleDto PostBusSchedule(BusScheduleDto busScheduleDto);
+        void DeleteBusSchedule(int id);
+
+        // Bus booking methods
+        IEnumerable<BusBookingDto> GetAllBusBookings();
+        BusBookingDto GetBusBooking(int id);
+        BusBookingDto PostBusBooking(BusBookingDto busBookingDto);
+        void DeleteBusBooking(int id);
     }
 }

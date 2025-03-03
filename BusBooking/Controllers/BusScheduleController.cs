@@ -1,6 +1,7 @@
 ﻿using BusBooking.Core.Dtos.Bus;
 using BusBooking.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BusBooking.Controllers
 {
@@ -15,74 +16,138 @@ namespace BusBooking.Controllers
             _busScheduleRepository = busScheduleRepository;
         }
 
-        // Get all bus schedules for a vendor
-        [HttpGet("GetBusSchedules")]
-        public IActionResult GetBusSchedules(int vendorId)
+        [HttpGet("GetBusSchedulesByVendor/{vendorId}")]
+        public IActionResult GetBusSchedulesByVendor(int vendorId)
         {
-            var schedules = _busScheduleRepository.GetBusSchedulesByVendor(vendorId);
-            return Ok(new
+            try
             {
-                message = "Bus schedules retrieved successfully",
-                result = true,
-                data = schedules
-            });
+                var schedules = _busScheduleRepository.GetBusSchedulesByVendor(vendorId);
+                return Ok(new
+                {
+                    message = "Bus schedules retrieved successfully",
+                    result = true,
+                    data = schedules
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, result = false });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
         }
 
-        // Get bus schedule by ID
         [HttpGet("GetBusScheduleById/{scheduleId}")]
         public IActionResult GetBusScheduleById(int scheduleId)
         {
-            var schedule = _busScheduleRepository.GetBusScheduleById(scheduleId);
-            if (schedule == null)
-                return NotFound(new { message = "Bus schedule not found", result = false });
-
-            return Ok(new
+            try
             {
-                message = "Bus schedule retrieved successfully",
-                result = true,
-                data = schedule
-            });
+                var schedule = _busScheduleRepository.GetBusScheduleById(scheduleId);
+                return Ok(new
+                {
+                    message = "Bus schedule retrieved successfully",
+                    result = true,
+                    data = schedule
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, result = false });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
         }
 
-        // Create a new bus schedule
-        [HttpPost("PostBusSchedule")]
+        [HttpPost("CreateBusSchedule")]
         public IActionResult CreateBusSchedule([FromBody] BusScheduleDto busScheduleDto)
         {
-            var result = _busScheduleRepository.CreateBusSchedule(busScheduleDto);
-            return Ok(new
+            try
             {
-                message = "Bus schedule created successfully",
-                result = true,
-                data = result
-            });
+                var result = _busScheduleRepository.CreateBusSchedule(busScheduleDto);
+                return Ok(new
+                {
+                    message = "Bus schedule created successfully",
+                    result = true,
+                    data = result
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, result = false });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
         }
 
-        // Update bus schedule
-        [HttpPut("PutBusSchedule/{scheduleId}")]
+        [HttpPut("UpdateBusSchedule/{scheduleId}")]
         public IActionResult UpdateBusSchedule(int scheduleId, [FromBody] BusScheduleDto busScheduleDto)
         {
-            var result = _busScheduleRepository.UpdateBusSchedule(scheduleId, busScheduleDto);
-            if (result == null)
-                return NotFound(new { message = "Bus schedule not found", result = false });
-
-            return Ok(new
+            try
             {
-                message = "Bus schedule updated successfully",
-                result = true,
-                data = result
-            });
+                var result = _busScheduleRepository.UpdateBusSchedule(scheduleId, busScheduleDto);
+                return Ok(new
+                {
+                    message = "Bus schedule updated successfully",
+                    result = true,
+                    data = result
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, result = false });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
         }
 
-        // Delete bus schedule
         [HttpDelete("DeleteBusSchedule/{scheduleId}")]
         public IActionResult DeleteBusSchedule(int scheduleId)
         {
-            _busScheduleRepository.DeleteBusSchedule(scheduleId);
-            return Ok(new
+            try
             {
-                message = "Bus schedule deleted successfully",
-                result = true
-            });
+                _busScheduleRepository.DeleteBusSchedule(scheduleId);
+                return Ok(new
+                {
+                    message = "Bus schedule deleted successfully",
+                    result = true
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, result = false });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
         }
     }
 }

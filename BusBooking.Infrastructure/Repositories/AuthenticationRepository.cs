@@ -1,10 +1,10 @@
-﻿// BusBooking.Infrastructure/Repositories/AuthenticationRepository.cs
-using BusBooking.Core.Dtos;
+﻿using BusBooking.Core.Dtos;
 using BusBooking.Core.Dtos.Auth;
 using BusBooking.Core.Dtos.User;
 using BusBooking.Core.Entites;
 using BusBooking.Core.Interfaces;
 using BusBooking.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore; // Add this for Include
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -29,8 +29,11 @@ namespace BusBooking.Infrastructure.Repositories
         // Authenticate user and generate JWT token
         public LoginResponseDto Authenticate(LoginRequestDto loginRequest)
         {
-            // Find the user by username and password
-            var user = _context.Users.SingleOrDefault(u => u.UserName == loginRequest.UserName && u.Password == loginRequest.Password);
+            // Find the user by username and password, and include the Role entity
+            var user = _context.Users
+                .Include(u => u.Role) // Eagerly load the Role entity
+                .SingleOrDefault(u => u.UserName == loginRequest.UserName && u.Password == loginRequest.Password);
+
             if (user == null)
                 return null;
 
@@ -94,8 +97,11 @@ namespace BusBooking.Infrastructure.Repositories
         // Get user by refresh token
         public UserDto GetUserByRefreshToken(string refreshToken)
         {
-            // Find the user by refresh token
-            var user = _context.Users.FirstOrDefault(u => u.RefreshToken == refreshToken);
+            // Find the user by refresh token, and include the Role entity
+            var user = _context.Users
+                .Include(u => u.Role) // Eagerly load the Role entity
+                .FirstOrDefault(u => u.RefreshToken == refreshToken);
+
             if (user == null)
                 return null;
 
@@ -127,7 +133,7 @@ namespace BusBooking.Infrastructure.Repositories
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Role, user.Role.RoleName)
+                    new Claim(ClaimTypes.Role, user.Role.RoleName) // Ensure Role is not null
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(int.Parse(jwtSettings["ExpiryInMinutes"])),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),

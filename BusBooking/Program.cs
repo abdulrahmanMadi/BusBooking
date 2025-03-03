@@ -56,6 +56,9 @@ namespace BusBooking
             builder.Services.AddControllers();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+            builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+            builder.Services.AddScoped<IBusBookingRepository, BusBookingRepository>();
+            builder.Services.AddScoped<IBusScheduleRepository, BusScheduleRepository>();
 
             // Configure Swagger
             builder.Services.AddEndpointsApiExplorer();
@@ -105,6 +108,13 @@ namespace BusBooking
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bus Booking API v1");
                 });
+            }
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                var seeder = new DataSeeder(context);
+                seeder.Seed();  // Call the seeding logic here
             }
 
             app.UseHttpsRedirection();

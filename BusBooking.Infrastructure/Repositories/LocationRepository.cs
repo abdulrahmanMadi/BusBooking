@@ -2,7 +2,9 @@
 using BusBooking.Core.Entites;
 using BusBooking.Core.Interfaces;
 using BusBooking.Infrastructure.Data;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BusBooking.Infrastructure.Repositories
 {
@@ -17,18 +19,36 @@ namespace BusBooking.Infrastructure.Repositories
 
         public IEnumerable<LocationDto> GetAllLocations()
         {
-            return _context.Locations.Select(l => new LocationDto
+            var locations = _context.Locations
+                .Select(l => new LocationDto
+                {
+                    LocationId = l.LocationId,
+                    LocationName = l.LocationName,
+                    Code = l.Code
+                }).ToList();
+
+            if (!locations.Any())
             {
-                LocationId = l.LocationId,
-                LocationName = l.LocationName,
-                Code = l.Code
-            }).ToList();
+                throw new KeyNotFoundException("No locations found.");
+            }
+
+            return locations;
         }
 
         public LocationDto GetLocationById(int locationId)
         {
+            if (locationId <= 0)
+            {
+                throw new ArgumentException("Invalid LocationId. LocationId must be greater than 0.");
+            }
+
             var location = _context.Locations.FirstOrDefault(l => l.LocationId == locationId);
-            return location == null ? null : new LocationDto
+            if (location == null)
+            {
+                throw new KeyNotFoundException($"Location with LocationId: {locationId} not found.");
+            }
+
+            return new LocationDto
             {
                 LocationId = location.LocationId,
                 LocationName = location.LocationName,
@@ -38,6 +58,21 @@ namespace BusBooking.Infrastructure.Repositories
 
         public LocationDto CreateLocation(LocationDto locationDto)
         {
+            if (locationDto == null)
+            {
+                throw new ArgumentNullException(nameof(locationDto), "LocationDto cannot be null.");
+            }
+
+            if (string.IsNullOrWhiteSpace(locationDto.LocationName))
+            {
+                throw new ArgumentException("LocationName is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(locationDto.Code))
+            {
+                throw new ArgumentException("Code is required.");
+            }
+
             var location = new Location
             {
                 LocationName = locationDto.LocationName,
@@ -53,8 +88,21 @@ namespace BusBooking.Infrastructure.Repositories
 
         public LocationDto UpdateLocation(int locationId, LocationDto locationDto)
         {
+            if (locationId <= 0)
+            {
+                throw new ArgumentException("Invalid LocationId. LocationId must be greater than 0.");
+            }
+
+            if (locationDto == null)
+            {
+                throw new ArgumentNullException(nameof(locationDto), "LocationDto cannot be null.");
+            }
+
             var location = _context.Locations.FirstOrDefault(l => l.LocationId == locationId);
-            if (location == null) return null;
+            if (location == null)
+            {
+                throw new KeyNotFoundException($"Location with LocationId: {locationId} not found.");
+            }
 
             location.LocationName = locationDto.LocationName;
             location.Code = locationDto.Code;
@@ -65,12 +113,19 @@ namespace BusBooking.Infrastructure.Repositories
 
         public void DeleteLocation(int locationId)
         {
-            var location = _context.Locations.FirstOrDefault(l => l.LocationId == locationId);
-            if (location != null)
+            if (locationId <= 0)
             {
-                _context.Locations.Remove(location);
-                _context.SaveChanges();
+                throw new ArgumentException("Invalid LocationId. LocationId must be greater than 0.");
             }
+
+            var location = _context.Locations.FirstOrDefault(l => l.LocationId == locationId);
+            if (location == null)
+            {
+                throw new KeyNotFoundException($"Location with LocationId: {locationId} not found.");
+            }
+
+            _context.Locations.Remove(location);
+            _context.SaveChanges();
         }
     }
 }
