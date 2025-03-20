@@ -8,9 +8,9 @@ namespace BusBooking.Core.Entites
 {
     public class LocationAddress
     {
-        public int LocationPointId { get; set; } // Primary key
-        public int LocationId { get; set; } // Foreign key to Location
-        public Location Location { get; set; } // Navigation property
+        public int LocationPointId { get; set; } 
+        public int LocationId { get; set; } 
+        public Location Location { get; set; } 
         public string LocationTitle { get; set; }
         public string LocationAddressString { get; set; }
     }

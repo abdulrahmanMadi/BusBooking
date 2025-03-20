@@ -8,8 +8,10 @@ namespace BusBooking.Core.Dtos.Auth
 {
     public class LoginResponseDto
     {
-        public string Token { get; set; } // JWT token
+        public int UserId { get; set; } // JWT token
+
+        public string Token { get; set; } 
         public string UserName { get; set; }
-        public string RefreshToken { get; set; } // Refresh token
+        public string RefreshToken { get; set; } 
     }
 }

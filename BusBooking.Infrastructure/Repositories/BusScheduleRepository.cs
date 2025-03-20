@@ -38,7 +38,9 @@ namespace BusBooking.Infrastructure.Repositories
                     ArrivalTime = bs.ArrivalTime,
                     ScheduleDate = bs.ScheduleDate,
                     Price = bs.Price,
-                    TotalSeats = bs.TotalSeats
+                    TotalSeats = bs.TotalSeats,
+                    AvailableSeats = bs.AvailableSeats
+
                 }).ToList();
 
             if (!schedules.Any())
@@ -74,7 +76,9 @@ namespace BusBooking.Infrastructure.Repositories
                 ArrivalTime = schedule.ArrivalTime,
                 ScheduleDate = schedule.ScheduleDate,
                 Price = schedule.Price,
-                TotalSeats = schedule.TotalSeats
+                TotalSeats = schedule.TotalSeats,
+                AvailableSeats = schedule.AvailableSeats
+
             };
         }
 
@@ -129,7 +133,9 @@ namespace BusBooking.Infrastructure.Repositories
                 ArrivalTime = busScheduleDto.ArrivalTime,
                 ScheduleDate = busScheduleDto.ScheduleDate,
                 Price = busScheduleDto.Price,
-                TotalSeats = busScheduleDto.TotalSeats
+                TotalSeats = busScheduleDto.TotalSeats,
+                AvailableSeats = busScheduleDto.AvailableSeats
+
             };
 
             _context.BusSchedules.Add(schedule);
@@ -199,6 +205,8 @@ namespace BusBooking.Infrastructure.Repositories
             busSchedule.ScheduleDate = busScheduleDto.ScheduleDate;
             busSchedule.Price = busScheduleDto.Price;
             busSchedule.TotalSeats = busScheduleDto.TotalSeats;
+            busSchedule.AvailableSeats = busScheduleDto.AvailableSeats;
+
 
             _context.SaveChanges();
             return busScheduleDto;

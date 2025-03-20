@@ -19,5 +19,7 @@ namespace BusBooking.Core.Dtos.Bus
         public DateTime ScheduleDate { get; set; }
         public decimal Price { get; set; }
         public int TotalSeats { get; set; }
+        public int? AvailableSeats { get; set; }
+
     }
 }

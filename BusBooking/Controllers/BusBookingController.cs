@@ -250,6 +250,33 @@ namespace BusBooking.Controllers
             }
         }
 
+        [HttpGet("GetBusBookingsByCustomerId/{customerId}")]
+        public IActionResult GetBusBookingsByCustomerId(int customerId)
+        {
+            try
+            {
+                var bookings = _busBookingRepository.GetBusBookingsByCustomerId(customerId);
+                return Ok(new
+                {
+                    message = "Bus bookings retrieved successfully",
+                    result = true,
+                    data = bookings
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, result = false });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, result = false });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message, result = false });
+            }
+        }
+
         [HttpGet("GetBusScheduleById/{id}")]
         public IActionResult GetBusScheduleById(int id)
         {

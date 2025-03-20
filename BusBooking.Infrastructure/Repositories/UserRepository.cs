@@ -5,10 +5,8 @@ using BusBooking.Core.Dtos.Vendor;
 using BusBooking.Core.Entites;
 using BusBooking.Core.Interfaces;
 using BusBooking.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore; // Add this for Include
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore; 
+
 
 namespace BusBooking.Infrastructure.Repositories
 {
@@ -21,11 +19,10 @@ namespace BusBooking.Infrastructure.Repositories
             _context = context;
         }
 
-        // General user methods
         public UserDto Authenticate(LoginRequestDto loginRequest)
         {
             var user = _context.Users
-                .Include(u => u.Role) // Eagerly load the Role entity
+                .Include(u => u.Role) 
                 .SingleOrDefault(u => u.UserName == loginRequest.UserName && u.Password == loginRequest.Password);
 
             if (user == null)
@@ -47,7 +44,7 @@ namespace BusBooking.Infrastructure.Repositories
                 ProjectName = "BusBooking",
                 RefreshToken = null,
                 RefreshTokenExpiryTime = null,
-                ContactNo = registerRequest.ContactNo // Additional field for vendors
+                ContactNo = registerRequest.ContactNo 
             };
 
             _context.Users.Add(user);
@@ -57,14 +54,14 @@ namespace BusBooking.Infrastructure.Repositories
         public IEnumerable<UserDto> GetAllUsers()
         {
             return _context.Users
-                .Include(u => u.Role) // Eagerly load the Role entity
+                .Include(u => u.Role) 
                 .Select(u => new UserDto
                 {
                     UserId = u.UserId,
                     UserName = u.UserName,
                     EmailId = u.EmailId,
                     FullName = u.FullName,
-                    Role = u.Role.RoleName, // Ensure Role is included in the query
+                    Role = u.Role.RoleName, 
                     CreatedDate = u.CreatedDate,
                     ProjectName = u.ProjectName
                 })
@@ -74,7 +71,7 @@ namespace BusBooking.Infrastructure.Repositories
         public UserDto GetUserById(int userId)
         {
             var user = _context.Users
-                .Include(u => u.Role) // Eagerly load the Role entity
+                .Include(u => u.Role) 
                 .FirstOrDefault(u => u.UserId == userId);
 
             return user == null ? null : MapToUserDto(user);
@@ -104,11 +101,10 @@ namespace BusBooking.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        // Vendor-specific methods
         public IEnumerable<VendorDto> GetAllVendors()
         {
             return _context.Users
-                .Include(u => u.Role) // Eagerly load the Role entity
+                .Include(u => u.Role) 
                 .Where(u => u.Role.RoleName == "Vendor")
                 .Select(u => new VendorDto
                 {
@@ -122,7 +118,7 @@ namespace BusBooking.Infrastructure.Repositories
         public VendorDto GetVendorById(int userId)
         {
             var user = _context.Users
-                .Include(u => u.Role) // Eagerly load the Role entity
+                .Include(u => u.Role) 
                 .FirstOrDefault(u => u.UserId == userId && u.Role.RoleName == "Vendor");
 
             return user == null ? null : new VendorDto
@@ -130,6 +126,7 @@ namespace BusBooking.Infrastructure.Repositories
                 VendorId = user.UserId,
                 VendorName = user.FullName,
                 ContactNo = user.ContactNo,
+                
                 EmailId = user.EmailId
             };
         }
@@ -181,7 +178,6 @@ namespace BusBooking.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        // Refresh token methods
         public void UpdateRefreshToken(int userId, string refreshToken, DateTime expiryTime)
         {
             var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
@@ -197,13 +193,12 @@ namespace BusBooking.Infrastructure.Repositories
         public UserDto GetUserByRefreshToken(string refreshToken)
         {
             var user = _context.Users
-                .Include(u => u.Role) // Eagerly load the Role entity
+                .Include(u => u.Role) 
                 .FirstOrDefault(u => u.RefreshToken == refreshToken);
 
             return user == null ? null : MapToUserDto(user);
         }
 
-        // Helper method to map User to UserDto
         private static UserDto MapToUserDto(User user)
         {
             return new UserDto
@@ -214,7 +209,10 @@ namespace BusBooking.Infrastructure.Repositories
                 FullName = user.FullName,
                 Role = user.Role.RoleName,
                 CreatedDate = user.CreatedDate,
-                ProjectName = user.ProjectName
+                ProjectName = user.ProjectName,
+                RefreshToken = user.RefreshToken,
+                ContactNo = user.ContactNo,
+                RefreshTokenExpiryTime = user.RefreshTokenExpiryTime,
             };
         }
 

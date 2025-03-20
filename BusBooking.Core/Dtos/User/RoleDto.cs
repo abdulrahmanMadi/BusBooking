@@ -9,6 +9,6 @@ namespace BusBooking.Core.Dtos.User
     public class RoleDto
     {
         public int RoleId { get; set; }
-        public string RoleName { get; set; } // e.g., Admin, Customer, Vendor
+        public string RoleName { get; set; } // Admin, Customer, Vendor
     }
 }

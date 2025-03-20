@@ -202,7 +202,8 @@ namespace BusBooking.Infrastructure.Repositories
                     ArrivalTime = bs.ArrivalTime,
                     ScheduleDate = bs.ScheduleDate,
                     Price = bs.Price,
-                    TotalSeats = bs.TotalSeats
+                    TotalSeats = bs.TotalSeats,
+                    AvailableSeats= bs.AvailableSeats
                 }).ToList();
 
             if (!schedules.Any())
@@ -276,7 +277,40 @@ namespace BusBooking.Infrastructure.Repositories
 
             return bookedSeats;
         }
+        public IEnumerable<BusBookingDto> GetBusBookingsByCustomerId(int customerId)
+        {
+            if (customerId <= 0)
+            {
+                throw new ArgumentException("Invalid CustomerId. CustomerId must be greater than 0.");
+            }
 
+            var bookings = _context.BusBookings
+                .Include(bb => bb.BusBookingPassengers)
+                .Where(bb => bb.CustId == customerId)
+                .Select(bb => new BusBookingDto
+                {
+                    BookingId = bb.BookingId,
+                    CustId = bb.CustId,
+                    BookingDate = bb.BookingDate,
+                    ScheduleId = bb.ScheduleId,
+                    BusBookingPassengers = bb.BusBookingPassengers.Select(p => new BusBookingPassengerDto
+                    {
+                        PassengerId = p.PassengerId,
+                        BookingId = p.BookingId,
+                        PassengerName = p.PassengerName,
+                        Age = p.Age,
+                        Gender = p.Gender,
+                        SeatNo = p.SeatNo
+                    }).ToList()
+                }).ToList();
+
+            if (!bookings.Any())
+            {
+                throw new KeyNotFoundException($"No bus bookings found for CustomerId: {customerId}.");
+            }
+
+            return bookings;
+        }
         public BusScheduleDto GetBusScheduleById(int id)
         {
             if (id <= 0)
@@ -513,7 +547,7 @@ namespace BusBooking.Infrastructure.Repositories
             busBookingDto.BookingId = booking.BookingId;
             return busBookingDto;
         }
-
+  
         public void DeleteBusBooking(int id)
         {
             if (id <= 0)

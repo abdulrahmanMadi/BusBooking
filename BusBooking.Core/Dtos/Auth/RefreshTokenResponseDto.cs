@@ -8,7 +8,7 @@ namespace BusBooking.Core.Dtos.Auth
 {
     public class RefreshTokenResponseDto
     {
-        public string Token { get; set; } // New JWT token
-        public string RefreshToken { get; set; } // New refresh token
+        public string Token { get; set; } 
+        public string RefreshToken { get; set; } 
     }
 }

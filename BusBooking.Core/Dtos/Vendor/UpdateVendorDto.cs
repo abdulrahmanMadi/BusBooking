@@ -8,7 +8,7 @@ namespace BusBooking.Core.Dtos.Vendor
 {
     public class UpdateVendorDto
     {
-        public string VendorName { get; set; } // Maps to FullName
+        public string VendorName { get; set; }
         public string ContactNo { get; set; }
         public string EmailId { get; set; }
     }

@@ -15,7 +15,8 @@ namespace BusBooking.Core.Interfaces
         LocationDto PostBusLocation(LocationDto locationDto);
         void DeleteBusLocation(int id);
 
-        // Bus schedule methods
+         IEnumerable<BusBookingDto> GetBusBookingsByCustomerId(int customerId);
+        
         IEnumerable<BusScheduleDto> GetBusSchedules();
         IEnumerable<BusScheduleDto> SearchBus(int from, int to, string date);
         IEnumerable<int> GetBookedSeats(int scheduleId);

@@ -20,7 +20,7 @@ namespace BusBooking.Infrastructure.Data
 
             // Configure primary keys
             modelBuilder.Entity<BusBooking.Core.Entites.BusBooking>().HasKey(b => b.BookingId);
-            modelBuilder.Entity<BusBookingPassenger>().HasKey(p => new { p.PassengerId, p.BookingId }); // Composite key
+            modelBuilder.Entity<BusBookingPassenger>().HasKey(p => new { p.PassengerId, p.BookingId }); 
             modelBuilder.Entity<BusSchedule>().HasKey(s => s.ScheduleId);
             modelBuilder.Entity<Location>().HasKey(l => l.LocationId);
             modelBuilder.Entity<LocationAddress>().HasKey(la => la.LocationPointId);
@@ -50,7 +50,7 @@ namespace BusBooking.Infrastructure.Data
      .HasOne(bs => bs.Vendor)
      .WithMany()
      .HasForeignKey(bs => bs.VendorId)
-     .OnDelete(DeleteBehavior.Restrict); // or DeleteBehavior.Cascade, depending on your requirements
+     .OnDelete(DeleteBehavior.Restrict); 
 
 
             // Configure FromLocation relationship

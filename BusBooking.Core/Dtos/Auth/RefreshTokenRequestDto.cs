@@ -8,7 +8,7 @@ namespace BusBooking.Core.Dtos.Auth
 {
     public class RefreshTokenRequestDto
     {
-        public string Token { get; set; } // Expired JWT token
-        public string RefreshToken { get; set; } // Refresh token
+        public string Token { get; set; } 
+        public string RefreshToken { get; set; } 
     }
 }

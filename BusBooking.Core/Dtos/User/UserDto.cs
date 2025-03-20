@@ -12,11 +12,11 @@ namespace BusBooking.Core.Dtos.User
         public string UserName { get; set; }
         public string EmailId { get; set; }
         public string FullName { get; set; }
-        public string Role { get; set; } // Role name (e.g., Admin, Customer, Vendor)
+        public string Role { get; set; } // Role name ( Admin, Customer, Vendor)
         public DateTime CreatedDate { get; set; }
         public string ProjectName { get; set; }
         public string RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
-        public string ContactNo { get; set; } // Additional field for vendors
+        public string ContactNo { get; set; } 
     }
 }

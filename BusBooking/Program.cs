@@ -47,9 +47,9 @@ namespace BusBooking
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOrigins",
-                    policy => policy.AllowAnyOrigin() // Allows requests from any origin
-                                    .AllowAnyMethod() // Allows all HTTP methods (GET, POST, etc.)
-                                    .AllowAnyHeader()); // Allows all headers
+                    policy => policy.AllowAnyOrigin() 
+                                    .AllowAnyMethod() 
+                                    .AllowAnyHeader()); 
             });
 
             // Add services to the container.
@@ -76,14 +76,13 @@ namespace BusBooking
                     }
                 });
 
-                // Add JWT Authentication to Swagger
                 var securityScheme = new OpenApiSecurityScheme
                 {
                     Name = "JWT Authentication",
                     Description = "Enter JWT Bearer token **_only_**",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
-                    Scheme = "bearer", // must be lowercase
+                    Scheme = "bearer", 
                     BearerFormat = "JWT",
                     Reference = new OpenApiReference
                     {
@@ -109,13 +108,13 @@ namespace BusBooking
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bus Booking API v1");
                 });
             }
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<ApplicationDbContext>();
-                var seeder = new DataSeeder(context);
-                seeder.Seed();  // Call the seeding logic here
-            }
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    var context = services.GetRequiredService<ApplicationDbContext>();
+            //    var seeder = new DataSeeder(context);
+            //    seeder.Seed();  
+            //}
 
             app.UseHttpsRedirection();
             app.UseCors("AllowAllOrigins");

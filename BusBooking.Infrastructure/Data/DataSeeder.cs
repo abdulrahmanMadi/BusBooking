@@ -19,17 +19,6 @@ namespace BusBooking.Infrastructure.Data
             // Ensure the database is created
             //_context.Database.EnsureCreated();
 
-            //// 1. Seed Roles
-            //if (!_context.Roles.Any())
-            //{
-            //    _context.Roles.AddRange(
-            //        new Role { RoleName = "Admin" },
-            //        new Role { RoleName = "Customer" },
-            //        new Role { RoleName = "Vendor" }
-            //    );
-            //    _context.SaveChanges();
-            //}
-
             //// 2. Seed Users
             //if (!_context.Users.Any())
             //{
@@ -274,27 +263,28 @@ namespace BusBooking.Infrastructure.Data
             //{
             //    _context.BusBookingPassengers.AddRange(
             //        new BusBookingPassenger
-            //        {
-            //            PassengerId = 1,
-            //            BookingId = 1,
-            //            PassengerName = "Ali Hassan",
-            //            Age = 23,
-            //            Gender = "Male",
-            //            SeatNo = 10
-            //        },
-            //        new BusBookingPassenger
-            //        {
-            //            PassengerId = 2,
-            //            BookingId = 2, // Unique BookingId
-            //            PassengerName = "Sara Ahmed",
-            //            Age = 27,
-            //            Gender = "Female",
-            //            SeatNo = 8
-            //        }
-            //    );
-            //    _context.SaveChanges();
-            //}
+            {
+                //            PassengerId = 1,
+                //            BookingId = 1,
+                //            PassengerName = "Ali Hassan",
+                //            Age = 23,
+                //            Gender = "Male",
+                //            SeatNo = 10
+                //        },
+                //        new BusBookingPassenger
+                //        {
+                //            PassengerId = 2,
+                //            BookingId = 2, // Unique BookingId
+                //            PassengerName = "Sara Ahmed",
+                //            Age = 27,
+                //            Gender = "Female",
+                //            SeatNo = 8
+                //        }
+                //    );
+                //    _context.SaveChanges();
+                //}
 
+            }
         }
     }
 }
